@@ -33,8 +33,9 @@ h1 { margin: 0; color: var(--text-dark); }
 .stat-box:nth-child(3) { border-left-color: #fdab3d; } 
 .stat-box:nth-child(4) { border-left-color: #e2445c; } 
 
-#autosave-indicator {
-    font-size: 12px; color: #27ae60; font-weight: bold; opacity: 0; transition: 0.3s;
+/* NEW: Autosave Indicator */
+#autosaveIndicator {
+  font-size: 12px; color: #27ae60; font-weight: bold; opacity: 0; transition: opacity 0.3s; margin-left: 10px;
 }
 
 .controls { display: flex; gap: 10px; align-items: center; }
@@ -46,38 +47,110 @@ h1 { margin: 0; color: var(--text-dark); }
 }
 .main-btn:hover { filter: brightness(1.1); }
 .export-btn { background: var(--excel-green); }
-.save-btn-admin { background: #2ecc71; display: none; } /* Hidden by default */
 
-/* TABLE STYLES */
+/* NEW: Admin Save Button Style */
+#adminSaveBtn { background: #2ecc71; display: none; }
+
+/* TABLE & SCROLLER */
 .table-wrapper {
   overflow-x: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-radius: 8px; background: #fff; max-height: 50vh; margin-bottom: 20px; padding-bottom: 5px;
 }
 .table-wrapper::-webkit-scrollbar { height: 12px; }
-.table-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
+.table-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; margin: 0 10px; }
 .table-wrapper::-webkit-scrollbar-thumb { background: #bdc3c7; border-radius: 8px; border: 2px solid #f1f1f1;}
+.table-wrapper::-webkit-scrollbar-thumb:hover { background: #95a5a6; }
 
 table { width: 100%; border-collapse: collapse; background: #fff; min-width: 1400px; }
 th, td { border: 1px solid var(--border-color); padding: 8px 10px; font-size: 13px; text-align: center; white-space: nowrap; }
-th { position: sticky; color: #fff; font-size: 14px; background: #34495e; top: 0; z-index: 3; }
+th { position: sticky; color: #fff; font-size: 14px; box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4); z-index: 3; }
 
-/* COLORS */
+/* DYNAMIC HEADER STYLES */
+.sort-header th { height: 35px; top: 0; cursor: pointer; user-select: none; background: #34495e; }
+.sort-header th:hover { filter: brightness(0.9); }
+.filter-row th { top: 55px; background: #ecf0f1 !important; padding: 5px; border-top: none; z-index: 2;}
+.col-filter { width: 100%; box-sizing: border-box; padding: 6px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px; outline: none; }
+.col-filter:focus { border-color: #3498db; }
+
+/* DEFAULT COLUMN COLORS */
+.sort-header th:nth-child(1), .sort-header th:nth-child(3) { background: #2980b9; }
+.sort-header th:nth-child(2) { background: #c0392b; }
+.sort-header th:nth-child(4), .sort-header th:nth-child(5) { background: #8e44ad; }
+.sort-header th:nth-child(6) { background: #d35400; }
+.sort-header th:nth-child(7) { background: #7f8c8d; }
+.sort-header th:nth-child(8) { background: #9b59b6; }
+.sort-header th:nth-child(9), .sort-header th:nth-child(10) { background: #27ae60; }
+
+td:nth-child(1) { background: #ebf5fb; }
+td:nth-child(2) { background: #fadbd8; }
+td:nth-child(3) { background: #d6eaf8; font-weight: 500;}
+td:nth-child(4) { background: #e8daef; }
+td:nth-child(5) { background: #d2b4de; }
+td:nth-child(7) { background: #eaeded; }
+td:nth-child(8) { background: #c39bd3; }
+
+/* STATUS COLORS */
 .status-working { background: #fdab3d !important; color: #fff !important; font-weight: bold; }
 .status-done { background: #00c875 !important; color: #fff !important; font-weight: bold; }
 .status-stuck { background: #e2445c !important; color: #fff !important; font-weight: bold; }
 .status-yet { background: #c4c4c4 !important; color: #fff !important; font-weight: bold; }
 .week-yes { background: #2ecc71 !important; color: #fff; font-weight: bold; }
 .week-no { background: #e74c3c !important; color: #fff; font-weight: bold; }
+.week-na { background: #f1c40f !important; font-weight: bold; }
+.week-waiting { background: #aed6f1 !important; font-weight: bold; }
+.row-orange td { background: #f39c12 !important; font-weight: bold; color: black; }
 
-/* MODALS & CONTEXT */
+select.dynamic-dropdown {
+  width: 100%; height: 100%; border: none; font-weight: inherit; color: inherit; font-family: inherit; font-size: inherit;
+  background: transparent; outline: none; cursor: pointer; appearance: none; text-align: center; text-align-last: center;
+}
+select.dynamic-dropdown option { background: #fff; color: #000; font-weight: normal; }
+
+td[contenteditable="true"] { cursor: text; }
+td[contenteditable="true"]:focus { outline: 3px solid var(--excel-green); outline-offset: -2px; box-shadow: inset 0 0 8px rgba(0,0,0,0.1); }
+tr.active-row td { filter: brightness(0.92); }
+.date-cell { cursor: pointer; position: relative; }
+.date-cell:hover::after { content: "📅"; position: absolute; right: 5px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
+
+/* RIGHT-CLICK CONTEXT MENU */
 .context-menu {
   position: absolute; background: #fff; border: 1px solid var(--border-color); box-shadow: 2px 4px 12px rgba(0,0,0,0.2);
   z-index: 10000; border-radius: 6px; padding: 8px 0; min-width: 200px; list-style: none; margin: 0; display: none;
 }
-.context-menu li { padding: 8px 20px; font-size: 13px; cursor: pointer; color: #2c3e50; display: flex; align-items: center; gap: 10px;}
+.context-menu li { padding: 8px 20px; font-size: 13px; cursor: pointer; color: #2c3e50; font-weight: 500; display: flex; align-items: center; gap: 10px;}
 .context-menu li:hover { background: #f4f7f6; color: #3498db; }
+.context-menu li.danger { color: #e74c3c; }
+.context-menu li.danger:hover { background: #fdf5f5; }
+.context-menu hr { border: none; border-top: 1px solid #ecf0f1; margin: 6px 0; }
 
+/* MODAL STYLES */
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); z-index: 10001; align-items: center; justify-content: center;
+}
+.modal-box {
+  background: #fff; padding: 25px; border-radius: 8px; width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.modal-box h3 { margin-top: 0; color: #2c3e50; }
+.modal-box label { font-size: 13px; font-weight: bold; color: #7f8c8d; display: block; margin-top: 15px; margin-bottom: 5px;}
+.modal-box select, .modal-box input {
+  width: 100%; padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px; box-sizing: border-box; font-family: inherit;
+}
+.modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+.modal-btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+.modal-btn.save { background: #27ae60; color: #fff; }
+.modal-btn.cancel { background: #ecf0f1; color: #333; }
+
+/* AUTOCOMPLETE */
+.autocomplete-items {
+  position: absolute; border: 1px solid #bdc3c7; border-radius: 4px; z-index: 9999; background-color: #fff; max-height: 200px; overflow-y: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.autocomplete-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #ecf0f1; font-size: 13px; color: #2c3e50; }
+.autocomplete-item:hover { background-color: #f4f7f6; color: #3498db; }
+.autocomplete-item strong { color: #2980b9; }
+
+/* TOAST NOTIFICATION */
 #toast {
-  visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); opacity: 0; transition: 0.3s;
+  visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s, bottom 0.3s;
 }
 #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 </style>
@@ -87,6 +160,61 @@ th { position: sticky; color: #fff; font-size: 14px; background: #34495e; top: 0
 
 <div id="toast">Notification text</div>
 
+<div id="colSettingsModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>⚙️ Column Settings</h3>
+    <p id="modalColName" style="margin:0; font-size:13px; color:#3498db; font-weight:bold;"></p>
+    
+    <label>Column Data Type:</label>
+    <select id="colTypeSelect" onchange="toggleDropdownOptions()">
+      <option value="text">📝 Free Text (Default)</option>
+      <option value="date">📅 Date Picker</option>
+      <option value="dropdown">🔽 Select Dropdown</option>
+    </select>
+    
+    <div id="dropdownOptionsDiv" style="display:none;">
+      <label>Dropdown Options (comma separated):</label>
+      <input type="text" id="colDropdownOptions" placeholder="e.g. Yes, No, Waiting, NA">
+      <small style="font-size:11px; color:#7f8c8d;">Separate choices with a comma.</small>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn save" onclick="saveColumnSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<ul id="contextMenu" class="context-menu">
+  <li class="ctx-header" onclick="renameColumnContext()">✏️ Rename Column</li>
+  <li class="ctx-header" onclick="openColumnSettingsContext()">⚙️ Column Settings (Type)</li>
+  <hr class="ctx-header">
+  <li class="ctx-header" onclick="addColumnContext(0)">➕ Insert Column Left</li>
+  <li class="ctx-header" onclick="addColumnContext(1)">➕ Insert Column Right</li>
+  <li class="ctx-header danger" onclick="deleteColumnContext()">🗑️ Delete Column</li>
+  
+  <li class="ctx-cell" onclick="copyCell()">📋 Copy</li>
+  <li class="ctx-cell" onclick="pasteCell()">📥 Paste</li>
+  <li class="ctx-cell" onclick="clearCell()">🧹 Clear Content</li>
+  <hr class="ctx-cell">
+  
+  <li class="ctx-row" onclick="addRowContext(0)">⬆️ Insert Row Above</li>
+  <li class="ctx-row" onclick="addRowContext(1)">⬇️ Insert Row Below</li>
+  <li class="ctx-row" onclick="duplicateRowContext()">🗂️ Duplicate Row</li>
+  <li class="ctx-row" onclick="moveRowContext(-1)">🔼 Move Row Up</li>
+  <li class="ctx-row" onclick="moveRowContext(1)">🔽 Move Row Down</li>
+  <li class="ctx-row danger" onclick="deleteRowContext()">🗑️ Delete Row</li>
+  <hr class="ctx-row">
+  
+  <li class="ctx-cell" onclick="toggleFormat('b')"><b>B</b> Bold Text</li>
+  <li class="ctx-cell" onclick="toggleFormat('i')"><i>I</i> Italic Text</li>
+  <li class="ctx-cell" onclick="setAlignment('left')">⬅️ Align Left</li>
+  <li class="ctx-cell" onclick="setAlignment('center')">↔️ Align Center</li>
+  <li class="ctx-cell" onclick="triggerColorPicker()">🎨 Change Cell Color</li>
+  <li class="ctx-cell" onclick="clearFormat()">🚫 Clear Formatting</li>
+</ul>
+<input type="color" id="hiddenColorPicker" style="display:none;" onchange="applyCellColor(this.value)">
+
 <div class="header-container">
   <div>
     <h1>Aurus Certification Tracker</h1>
@@ -95,162 +223,366 @@ th { position: sticky; color: #fff; font-size: 14px; background: #34495e; top: 0
       <div class="stat-box">✅ Done: <span id="statComp">0</span></div>
       <div class="stat-box">⏳ Working: <span id="statProg">0</span></div>
       <div class="stat-box">🛑 Stuck: <span id="statStuck">0</span></div>
-      <span id="autosave-indicator">☁️ Autosaved</span>
+      <span id="autosaveIndicator">☁️ Autosaved</span>
     </div>
   </div>
   <div class="controls">
-    <button id="manualSaveBtn" class="main-btn save-btn-admin" onclick="saveData()">💾 Save Now</button>
+    <button id="adminSaveBtn" class="main-btn" onclick="saveData()">💾 Save Now</button>
     <button class="main-btn export-btn" onclick="exportCSV()">📤 Export CSV</button>
     <input type="text" id="searchInput" placeholder="🔍 Global Search..." oninput="renderBodies()">
     <button id="adminBtn" class="main-btn" onclick="toggleAdmin()">🔒 Enable Admin Mode</button>
   </div>
 </div>
 
-<h2 class="section-title">⏳ In-Progress Projects</h2>
+<h2 class="section-title">⏳ In-Progress & Queued Projects</h2>
 <div class="table-wrapper">
-    <table id="inProgressTable"><thead></thead><tbody id="tbody-inprogress"></tbody></table>
+<table id="inProgressTable"><thead></thead><tbody id="tbody-inprogress"></tbody></table>
 </div>
 
 <h2 class="section-title">✅ Completed Projects</h2>
 <div class="table-wrapper">
-    <table id="completedTable"><thead></thead><tbody id="tbody-completed"></tbody></table>
+<table id="completedTable"><thead></thead><tbody id="tbody-completed"></tbody></table>
 </div>
 
 <script>
-// CONFIG
-const teamMembersList = ["Nitesh Kharose", "Harshal Chaudhari", "Hemantkumar Nikole", "Nagamani Gatti", "Vaishnavi Mate"];
-const initialHeaders = ["SR NO", "EP ID", "Certification Name", "Start Date", "End Date", "Project Status", "Developer Name", "Team Lead Name", "Last Week", "9–13 Feb"];
-
-// INITIAL DATA
-const rawInitialData = [
-    ["1","EP-0128","Chase ISO Wiseasy R1 PTS V6","21/09/25","17/02/26","Working on it","Sakshi Gudmewar","Vrushabh Munde","YES","YES"],
-    ["12","EP-0165","Chase Stratus Store and Forward","05/12/25","12/02/26","Done","Gaurav Shitole","Gaurav Shitole","","YES"]
+// INITIAL DATA CONSTANTS
+const teamMembersList = [
+  "Nitesh Kharose", "Harshal Chaudhari", "Hemantkumar Nikole", "Nagamani Gatti", "Vaishnavi Mate", "Ashrin Shaik", 
+  "Praneetha Chandragiri", "Rushikesh Kadam", "Dipak Pawar", "Rohit Sonawane", "Prathamesh Chitodikar", "Prakash Borude",
+  "Nilesh Dhongade", "Kalyani Wabale", "Raghav Naulakha", "Vishal Gaikwad", "Arjav Jain", "Akash deshmukh", "Tushar Phatak", 
+  "Vrushabh Mundhe", "Prabhat kashyap", "Gayatri Kelhe", "Amol Datal", "Edara Venkata Lakshmi Siva Swetha", 
+  "Devi srilakshmi Gudimetla", "ManiTeja Chittabattina", "Vishnu Vardhan Lekkala", "Yuva Sai Reddy Vaka", "SivaPuram KartikaPriya", 
+  "Sanket Bargal", "Shivam Sonawane", "Kunal Shinde", "Nithyananda Thalla", "Swagata Ranagar", "Atharva Sharma",
+  "Kartik Machare", "Sushant Gavade", "Gaurav Shitole", "Deepti Soni", "Dhruv Naina", "Hitendra Patel", 
+  "Lekhana Somayajula", "Sumith Venkat Nallabothula", "Kritika Singh", "Shivani Sakanure", "Anusha Kanthed", 
+  "Shubham Gilbile", "Harshitha Bhavnasai", "Pratik Patil", "Dheeraj Shukla", "Parag Jain", "Ishita Sakhala", 
+  "Kalyani Raut", "Akhila Ravi"
 ];
 
-// STATE
+const initialHeaders = ["SR NO", "EP ID", "Certification Name", "Start Date", "End Date", "Project Status", "Developer Name", "Team Lead Name", "Last Week", "9–13 Feb"];
+
+const initialMeta = {
+    3: { type: 'date' },
+    4: { type: 'date' },
+    5: { type: 'dropdown', options: ['Working on it', 'Done', 'Stuck', 'Yet to Start'] },
+    8: { type: 'dropdown', options: ['YES', 'NO', 'NA', 'Waiting'] },
+    9: { type: 'dropdown', options: ['YES', 'NO', 'NA', 'Waiting'] }
+};
+
+const rawInitialData = [
+["1","EP-0128","Chase ISO Wiseasy R1 PTS V6 [04157999]","21/09/25","17/02/26","Working on it","Sakshi Gudmewar","Vrushabh Munde","YES","YES"],
+["2","EP-0132","Flexa Wallet Instore Customer Presented Code","15/11/25","20/02/26","Working on it","Naga Mani Gatti","Harshal Chaudhari","YES","YES"],
+["3","EP-0134","Flexa Wallet Instore Merchant Presented Code","15/11/25","20/02/26","Working on it","Naga Mani Gatti","Harshal Chaudhari","YES","YES"],
+["4","EP-0136","Flexa Wallet Ecommerce Merchant Presented Code","15/11/25","31/03/26","Working on it","Naga Mani Gatti","Harshal Chaudhari","YES","YES"],
+["5","EP-0137","BVNK Stable Coins","02/02/26","30/04/26","Working on it","Vaishnavi Mate","Harshal Chaudhari","YES","YES"],
+["6","EP-0156","Fiserv Petro Outdoor Cert – Gilbarco M7","14/01/26","13/05/26","Working on it","Mani teja , Arjav","Vishal Gaikwad","","YES"],
+["7","EP-0157","WorldPay Network Token and Detokenization","10/01/26","10/02/26","Working on it","Harshitha Bhavnasai","Pratik Patil","","YES"],
+["8","EP-0160","GetNet Chile Lane 8000 PTS6","NA","NA","Working on it","","Sanket Bargal","","YES"],
+["9","EP-0161","GetNet In-store Implementation – Mexico","NA","NA","Yet to Start","Kritika Singh","Pratik Patil","","YES"],
+["10","EP-0163","Chase Stratus DCC","17/10/25","12/02/26","Working on it","Kartik Machare","Gaurav Shitole","","YES"],
+["11","EP-0164","Chase UTF Tandem 3DS","24/09/25","16/02/26","Working on it","Kartik Machare","Gaurav Shitole","","YES"],
+["12","EP-0165","Chase Stratus Store and Forward","05/12/25","12/02/26","Done","Gaurav Shitole","Gaurav Shitole","","YES"],
+["13","EP-0166","Chase UTF Tandem Store and Forward","15/12/25","09/02/26","Stuck","Swagata","Gaurav Shitole","","Waiting"],
+["14","EP-0167","ForumPay Wallet Ecommerce MPC","21/01/26","27/03/26","Working on it","Vaishnavi Mate","Harshal Chaudhari","YES","YES"],
+["15","EP-0187","Chase ISO Petro Fuelman & FleetCor","17/12/25","15/02/26","Working on it","Akash Deshmukh","Vishal Gaikwad","","YES"],
+["16","EP-0189","TSYS Ingenico Lane 3600","18/11/25","09/03/26","Working on it","Dipak Pawar","Rushikesh Kadam","","YES"],
+["17","EP-0191","Fiserv Canada RAU083 – Lane 8000","01/08/25","NA","Yet to Start","","Gayatri Kelhe","","YES"],
+["18","EP-0192","Citcon Ecommerce Certification","05/08/25","08/10/25","Done","Hemantkumar Nikole","Harshal Chaudhari","","YES"],
+["19","EP-0194","Incomm Gift Pre/Post Auth","29/01/26","27/02/26","Working on it","Parag Jain","Dheeraj Shukla","","YES"],
+["20","EP-0195","Chase UTF EMV EBT","19/01/26","27/02/26","Working on it","Deepti Soni","Gaurav Shitole","","NA"],
+["21","EP-0196","Worldpay Petro Mastercard 2.0","NA","NA","Yet to Start","Anusha","Vishal Gaikwad","","YES"],
+["22","EP-0197","FD Valulink Gift Regression","NA","NA","Yet to Start","Prathamesh Chitodikar","Rushikesh Kadam","","YES"],
+["23","EP-0198","Worldpay CTLS Cashback","18/08/25","06/03/26","Working on it","Prabhat Kashyap","Vrushabh Mundhe","YES","YES"],
+["24","EP-0199","Worldpay Aurus 021 – M450","01/10/25","27/02/26","Working on it","Kunal Shinde","Sanket Bargal","YES","YES"],
+["25","EP-0200","Fiserv Europe – Lane 8000","30/07/25","27/02/26","Working on it","Akhila Ravi","Dheeraj Shukla","","YES"],
+["26","EP-0202","Fiserv LATAM Argentina – A920","01/10/25","27/03/26","Working on it","Kalyani Raut, Shivam","Dheeraj Shukla","",""],
+["27","EP-0203","Moneris Canada – Macless","01/12/25","20/02/26","Working on it","Akhila Ravi","Dheeraj Shukla","","YES"],
+["28","EP-0204","Worldpay Aurus 025 iOS","02/02/26","29/05/26","Working on it","Kunal Shinde","Sanket Bargal","YES","YES"],
+["29","EP-0205","Worldpay Aurus 020 Android","01/10/25","27/02/26","Working on it","Kunal Shinde","Sanket Bargal","YES","YES"],
+["30","EP-0206","Forage (4-H) EBT Ecommerce","NA","NA","Yet to Start","Prathamesh Chitodikar","Rushikesh Kadam","","NO"],
+["31","EP-0207","Elavon Canada Viaconex DCC","13/08/25","17/02/26","Working on it","Pravalika","Sushant G","","YES"],
+["32","EP-0208","Elavon Canada Viaconex SolEng","09/10/25","30/04/26","Working on it","Pravalika","Sushant G","","YES"],
+["33","EP-0193","Soda Health OTC Ecommerce","02/02/26","27/03/26","Working on it","Parag Jain","Hemant Nikole","YES",""],
+["34","EP-0209","Citcon Ecommerce GPay & ApplePay","08/09/25","08/10/25","Done","Hemantkumar Nikole","Harshal Chaudhari","","YES"],
+["35","EP-0211","Incomm OTC Ecommerce","15/01/26","27/02/26","Working on it","Parag Jain","Hemant Nikole","YES","YES"],
+["36","","KPN Processor Integration","","","Yet to Start","Ishita","Hemant Nikole","","YES"]
+];
+
+// STATE MANAGEMENT
 let HEADERS = localStorage.getItem("trackerHeaders_v8") ? JSON.parse(localStorage.getItem("trackerHeaders_v8")) : [...initialHeaders];
 let DATA = localStorage.getItem("trackerData_v8") ? JSON.parse(localStorage.getItem("trackerData_v8")) : JSON.parse(JSON.stringify(rawInitialData));
 let FORMATS = localStorage.getItem("trackerFormats_v8") ? JSON.parse(localStorage.getItem("trackerFormats_v8")) : {};
-let COLUMN_META = { 5: { type: 'dropdown', options: ['Working on it', 'Done', 'Stuck', 'Yet to Start'] } };
+let COLUMN_META = localStorage.getItem("trackerColMeta_v8") ? JSON.parse(localStorage.getItem("trackerColMeta_v8")) : JSON.parse(JSON.stringify(initialMeta));
 
-let admin = false;
-let autosaveTimer;
+let admin = false, activeRow = null;
+let sortCol = -1, sortAsc = true;
+let contextTarget = null;
+let clipboardData = null;
 
-// CORE FUNCTIONS
-function toggleAdmin() {
-    if(!admin){
-        if(prompt("Admin Password:") !== "admin123") return;
-        admin = true;
-        document.getElementById("adminBtn").innerText = "🔓 Exit Admin";
-        document.getElementById("manualSaveBtn").style.display = "block";
-        showToast("Admin Mode On");
-    } else {
-        admin = false;
-        document.getElementById("adminBtn").innerText = "🔒 Enable Admin Mode";
-        document.getElementById("manualSaveBtn").style.display = "none";
-    }
-    renderBodies(); renderHeaders();
+// AUTOSAVE TIMER
+let autosaveTimer = null;
+
+// UTILS
+function showToast(msg, type="success") {
+  const toast = document.getElementById("toast"); toast.innerText = msg;
+  toast.style.background = type === "success" ? "#27ae60" : "#e74c3c";
+  toast.className = "show"; setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+}
+function parseDate(dmy) {
+    if(!dmy || dmy === "NA") return "";
+    let p = dmy.split('/'); if(p.length === 3) return `${p[2].length === 2 ? "20"+p[2] : p[2]}-${p[1].padStart(2, '0')}-${p[0].padStart(2, '0')}`;
+    return "";
+}
+function formatDate(ymd) {
+    if(!ymd) return ""; let p = ymd.split('-'); if(p.length === 3) return `${p[2]}/${p[1]}/${p[0].slice(-2)}`;
+    return "";
+}
+function getTextColorForBg(hex) {
+    if(!hex) return "#000";
+    let color = hex.charAt(0) === '#' ? hex.substring(1, 7) : hex;
+    let r = parseInt(color.substring(0, 2), 16), g = parseInt(color.substring(2, 4), 16), b = parseInt(color.substring(4, 6), 16);
+    return (((r * 299) + (g * 587) + (b * 114)) / 1000) > 128 ? '#000000' : '#ffffff';
 }
 
+// RENDER ENGINE
 function renderHeaders() {
-    ['inProgressTable', 'completedTable'].forEach(tid => {
-        const thead = document.querySelector(`#${tid} thead`);
-        thead.innerHTML = `<tr>${HEADERS.map(h => `<th>${h}</th>`).join('')}</tr>`;
-    });
+  ['inProgressTable', 'completedTable'].forEach(tid => {
+      const thead = document.querySelector(`#${tid} thead`);
+      let sortHtml = `<tr class="sort-header">`;
+      HEADERS.forEach((h, i) => {
+          let arrow = (i === sortCol) ? (sortAsc ? " ▲" : " ▼") : "";
+          sortHtml += `<th onclick="sortTable(${i})" oncontextmenu="return false;">${h}${arrow}</th>`;
+      });
+      sortHtml += `</tr><tr class="filter-row">`;
+      HEADERS.forEach((h, i) => {
+          let val = thead.querySelector(`.col-filter[data-col="${i}"]`)?.value || "";
+          sortHtml += `<th><input type="text" class="col-filter" data-col="${i}" placeholder="Filter..." value="${val}" oninput="renderBodies()"></th>`;
+      });
+      sortHtml += `</tr>`;
+      thead.innerHTML = sortHtml;
+  });
 }
 
 function renderBodies() {
-    const tbProg = document.getElementById("tbody-inprogress");
-    const tbComp = document.getElementById("tbody-completed");
-    tbProg.innerHTML = ""; tbComp.innerHTML = "";
-    
-    let stats = { total: 0, comp: 0, prog: 0, stuck: 0 };
+ const tbProg = document.getElementById("tbody-inprogress"); const tbComp = document.getElementById("tbody-completed");
+ tbProg.innerHTML = ""; tbComp.innerHTML = "";
+ 
+ const globalQ = document.getElementById("searchInput").value.toLowerCase();
+ const inProgF = Array.from(document.querySelectorAll("#inProgressTable .col-filter")).map(i => i.value.toLowerCase());
+ const compF = Array.from(document.querySelectorAll("#completedTable .col-filter")).map(i => i.value.toLowerCase());
 
-    DATA.forEach((r, idx) => {
-        const status = r[5] ? r[5].toUpperCase() : "";
-        const isDone = status === "DONE";
-        
-        if(isDone) stats.comp++; else if(status === "STUCK") stats.stuck++; else stats.prog++;
-        stats.total++;
+ let total = 0, compCount = 0, progCount = 0, stuckCount = 0;
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = r.map((cell, cIdx) => {
-            let editable = admin && cIdx !== 5 ? 'contenteditable="true"' : '';
-            let cls = "";
-            if(cIdx === 5) {
-                if(status === "DONE") cls = "status-done";
-                else if(status === "STUCK") cls = "status-stuck";
-                else cls = "status-working";
-            }
-            
-            // Dropdown for Status
-            if(admin && cIdx === 5) {
-                return `<td class="${cls}"><select onchange="updateCell(this.value, ${idx}, 5)">
-                    <option value="Working on it" ${r[5]==='Working on it'?'selected':''}>Working</option>
-                    <option value="Done" ${r[5]==='Done'?'selected':''}>Done</option>
-                    <option value="Stuck" ${r[5]==='Stuck'?'selected':''}>Stuck</option>
-                </select></td>`;
-            }
+ let statusIdx = -1; let epIdx = -1;
+ HEADERS.forEach((h, i) => { if(h.toLowerCase().includes("status")) statusIdx = i; if(h.toLowerCase().includes("ep id")) epIdx = i; });
 
-            return `<td ${editable} class="${cls}" oninput="handleInput(${idx}, ${cIdx}, this)">${cell}</td>`;
-        }).join('');
-        
-        if(isDone) tbComp.appendChild(tr); else tbProg.appendChild(tr);
-    });
+ DATA.forEach((r, originalIndex) => {
+  const statusStr = (statusIdx >= 0 && r[statusIdx]) ? r[statusIdx].toUpperCase().trim() : "";
+  const isDone = statusStr === "DONE" || statusStr === "[COMPLETED]";
 
-    document.getElementById("statTotal").innerText = stats.total;
-    document.getElementById("statComp").innerText = stats.comp;
-    document.getElementById("statProg").innerText = stats.prog;
-    document.getElementById("statStuck").innerText = stats.stuck;
-}
+  if(globalQ && !r.join(" ").toLowerCase().includes(globalQ)) return;
+  const activeF = isDone ? compF : inProgF;
+  let match = true;
+  for(let i = 0; i < activeF.length; i++) { if (activeF[i] && r[i] && !r[i].toLowerCase().includes(activeF[i])) { match = false; break; } }
+  if (!match) return;
 
-// AUTOSAVE LOGIC
-function handleInput(rIdx, cIdx, el) {
-    if(!admin) return;
-    
-    // Update local data
-    DATA[rIdx][cIdx] = el.innerText;
-    
-    // Reset Timer for 2 seconds
-    clearTimeout(autosaveTimer);
-    autosaveTimer = setTimeout(() => {
-        saveData(true); // true means it's an autosave
-    }, 2000);
+  if(isDone) compCount++; else if (statusStr === "WORKING ON IT" || statusStr === "[IN-PROGRESS]") progCount++; else if (statusStr === "STUCK") stuckCount++;
+  total++;
+
+  const tr = document.createElement("tr"); tr.dataset.index = originalIndex;
+  if(epIdx >= 0 && r[epIdx] === "EP-0160") tr.classList.add("row-orange");
+  
+  tr.innerHTML = r.map((c, i) => {
+   let colMeta = COLUMN_META[i] || { type: 'text' };
+   let cls = "";
+   let cellVal = c ? c.trim() : "";
+   
+   if (i === statusIdx) {
+       let v = cellVal.toUpperCase();
+       if (v === "WORKING ON IT" || v === "[IN-PROGRESS]") cls = "status-working";
+       else if (v === "DONE" || v === "[COMPLETED]") cls = "status-done";
+       else if (v === "STUCK") cls = "status-stuck";
+       else if (v === "YET TO START") cls = "status-yet";
+   } else if (cellVal.toUpperCase() === "YES") cls="week-yes"; 
+     else if (cellVal.toUpperCase() === "NO") cls="week-no";
+     else if (cellVal.toUpperCase() === "NA") cls="week-na"; 
+     else if (cellVal.toUpperCase().includes("WAIT")) cls="week-waiting";
+
+   let fmt = (FORMATS[originalIndex] && FORMATS[originalIndex][i]) ? FORMATS[originalIndex][i] : {};
+   let styleStr = '';
+   if(fmt.bg) styleStr += `background-color: ${fmt.bg} !important; color: ${getTextColorForBg(fmt.bg)} !important;`;
+   if(fmt.b) styleStr += `font-weight: bold;`;
+   if(fmt.i) styleStr += `font-style: italic;`;
+   if(fmt.a) styleStr += `text-align: ${fmt.a};`;
+
+   let content = cellVal;
+   let isEditable = false;
+
+   if (admin) {
+       if (colMeta.type === 'dropdown') {
+           let opts = colMeta.options || [];
+           let optHtml = `<option value=""></option>` + opts.map(o => `<option value="${o}" ${o.toLowerCase() === cellVal.toLowerCase() ? 'selected' : ''}>${o}</option>`).join('');
+           content = `<select class="dynamic-dropdown" onchange="updateCell(this.value, ${originalIndex}, ${i})">${optHtml}</select>`;
+       } else if (colMeta.type === 'date') {
+           cls += " date-cell";
+       } else {
+           isEditable = true;
+       }
+   }
+
+   return `<td contenteditable="${isEditable}" class="${cls}" style="${styleStr}">${content}</td>`;
+  }).join("");
+  
+  if (isDone) tbComp.appendChild(tr); else tbProg.appendChild(tr);
+ });
+
+ document.getElementById("statTotal").innerText = total; document.getElementById("statComp").innerText = compCount;
+ document.getElementById("statProg").innerText = progCount; document.getElementById("statStuck").innerText = stuckCount;
 }
 
 function updateCell(val, rIdx, cIdx) {
-    DATA[rIdx][cIdx] = val;
-    renderBodies();
-    saveData(true);
+    DATA[rIdx][cIdx] = val; renderBodies();
+    triggerAutosave();
 }
 
-function saveData(isAutosave = false) {
-    localStorage.setItem("trackerData_v8", JSON.stringify(DATA));
-    localStorage.setItem("trackerHeaders_v8", JSON.stringify(HEADERS));
-    
-    if(isAutosave) {
-        const indicator = document.getElementById("autosave-indicator");
-        indicator.style.opacity = "1";
-        setTimeout(() => indicator.style.opacity = "0", 1500);
-    } else {
-        showToast("💾 Changes Saved Successfully!");
+// INPUT HANDLER WITH AUTOSAVE TRIGGER
+document.addEventListener("input", e => {
+ if(admin && e.target.tagName === "TD" && !e.target.querySelector('select')) {
+  const tr = e.target.parentElement; const rIdx = parseInt(tr.dataset.index); const cIdx = [...tr.children].indexOf(e.target);
+  DATA[rIdx][cIdx] = e.target.innerText;
+  handleAutocomplete(e.target, cIdx);
+  
+  if(!FORMATS[rIdx] || !FORMATS[rIdx][cIdx]) {
+      let v = e.target.innerText.toUpperCase().trim();
+      e.target.classList.remove('week-yes','week-no','week-na','week-waiting');
+      if(v === "YES") e.target.classList.add("week-yes");
+      else if(v === "NO") e.target.classList.add("week-no");
+      else if(v === "NA") e.target.classList.add("week-na");
+      else if(v.includes("WAIT")) e.target.classList.add("week-waiting");
+  }
+  triggerAutosave();
+ }
+});
+
+function triggerAutosave() {
+  if(!admin) return;
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(() => {
+    saveData(true); // Save silently for autosave
+  }, 2000);
+}
+
+function sortTable(colIndex) {
+  if (sortCol === colIndex) sortAsc = !sortAsc; else { sortCol = colIndex; sortAsc = true; }
+  let mapped = DATA.map((r, i) => ({ row: r, fmt: FORMATS[i] || {} }));
+  mapped.sort((a, b) => {
+    let valA = (a.row[colIndex]||"").toLowerCase(); let valB = (b.row[colIndex]||"").toLowerCase();
+    if(colIndex === 0) { valA = parseInt(valA) || 0; valB = parseInt(valB) || 0; }
+    if (valA < valB) return sortAsc ? -1 : 1;
+    if (valA > valB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+  DATA = mapped.map(m => m.row);
+  FORMATS = {};
+  mapped.forEach((m, i) => { if(Object.keys(m.fmt).length > 0) FORMATS[i] = m.fmt; });
+  renderBodies(); renderHeaders();
+}
+
+function toggleAdmin() {
+ if(!admin){
+  if(prompt("Enter Admin Password:") !== "admin123") return showToast("Incorrect Password!", "error");
+  admin = true; 
+  document.getElementById("adminBtn").innerText = "🔓 Exit Admin Mode"; 
+  document.getElementById("adminSaveBtn").style.display = "block";
+  showToast("Admin Mode Enabled");
+ } else {
+  admin = false; 
+  document.getElementById("adminBtn").innerText = "🔒 Enable Admin Mode";
+  document.getElementById("adminSaveBtn").style.display = "none";
+  if(activeRow) activeRow.classList.remove("active-row"); activeRow = null;
+ }
+ renderBodies(); renderHeaders();
+}
+
+document.addEventListener('contextmenu', function(e) {
+    if(!admin) return;
+    let th = e.target.closest('.sort-header th'); let td = e.target.closest('td');
+    if (th || td) {
+        e.preventDefault(); contextTarget = th || td;
+        const menu = document.getElementById("contextMenu");
+        menu.style.display = "block"; menu.style.left = e.pageX + "px"; menu.style.top = e.pageY + "px";
+        const isHeader = !!th;
+        document.querySelectorAll('.ctx-header').forEach(el => el.style.display = isHeader ? "flex" : "none");
+        document.querySelectorAll('.ctx-row').forEach(el => el.style.display = isHeader ? "none" : "flex");
+        document.querySelectorAll('.ctx-cell').forEach(el => el.style.display = isHeader ? "none" : "flex");
+        if(td && activeRow) activeRow.classList.remove('active-row');
+        if(td) { activeRow = td.parentElement; activeRow.classList.add('active-row'); }
     }
+});
+document.addEventListener('click', e => { 
+    if(!e.target.closest('.context-menu')) document.getElementById("contextMenu").style.display = "none"; 
+});
+
+function renameColumnContext() {
+    if(!contextTarget) return;
+    const cIdx = contextTarget.cellIndex; const oldName = HEADERS[cIdx];
+    const newName = prompt("Rename Column:", oldName);
+    if(newName && newName !== oldName) { HEADERS[cIdx] = newName; renderHeaders(); renderBodies(); showToast("Column Renamed"); triggerAutosave(); }
+    document.getElementById("contextMenu").style.display = "none";
+}
+function addColumnContext(offset) {
+    if(!contextTarget) return;
+    const cIdx = contextTarget.cellIndex + offset;
+    const colName = prompt("Enter new Column Name:");
+    if(!colName) return;
+    HEADERS.splice(cIdx, 0, colName); DATA.forEach(row => row.splice(cIdx, 0, ""));
+    let newMeta = {}; for(let k in COLUMN_META) { let key = parseInt(k); newMeta[key >= cIdx ? key+1 : key] = COLUMN_META[k]; } COLUMN_META = newMeta;
+    for(let r in FORMATS) { let newFmt = {}; for(let k in FORMATS[r]){ let key = parseInt(k); newFmt[key >= cIdx ? key+1 : key] = FORMATS[r][k]; } FORMATS[r] = newFmt; }
+    renderHeaders(); renderBodies(); showToast(`Column Added`); triggerAutosave();
+    document.getElementById("contextMenu").style.display = "none";
+}
+function deleteColumnContext() {
+    if(!contextTarget) return; const cIdx = contextTarget.cellIndex;
+    if(confirm(`Delete column "${HEADERS[cIdx]}" forever?`)) {
+        HEADERS.splice(cIdx, 1); DATA.forEach(row => row.splice(cIdx, 1));
+        let newMeta = {}; for(let k in COLUMN_META) { let key=parseInt(k); if(key!==cIdx) newMeta[key > cIdx ? key-1 : key] = COLUMN_META[k]; } COLUMN_META = newMeta;
+        for(let r in FORMATS) { let newFmt = {}; for(let k in FORMATS[r]){ let key=parseInt(k); if(key!==cIdx) newFmt[key > cIdx ? key-1 : key] = FORMATS[r][k]; } FORMATS[r] = newFmt; }
+        renderHeaders(); renderBodies(); showToast(`Column Deleted`); triggerAutosave();
+    }
+    document.getElementById("contextMenu").style.display = "none";
 }
 
-function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.innerText = msg; t.className = "show";
-    setTimeout(() => t.className = "", 3000);
+let editingColIdx = -1;
+function openColumnSettingsContext() {
+    if(!contextTarget) return;
+    editingColIdx = contextTarget.cellIndex;
+    document.getElementById("modalColName").innerText = "Column: " + HEADERS[editingColIdx];
+    let meta = COLUMN_META[editingColIdx] || {type: 'text'};
+    document.getElementById("colTypeSelect").value = meta.type;
+    document.getElementById("colDropdownOptions").value = meta.options ? meta.options.join(', ') : "";
+    toggleDropdownOptions();
+    document.getElementById("colSettingsModal").style.display = "flex";
+    document.getElementById("contextMenu").style.display = "none";
+}
+function toggleDropdownOptions() {
+    const val = document.getElementById("colTypeSelect").value;
+    document.getElementById("dropdownOptionsDiv").style.display = val === 'dropdown' ? 'block' : 'none';
+}
+function closeModal() { document.getElementById("colSettingsModal").style.display = "none"; }
+function saveColumnSettings() {
+    const type = document.getElementById("colTypeSelect").value;
+    const optsRaw = document.getElementById("colDropdownOptions").value;
+    COLUMN_META[editingColIdx] = { type: type };
+    if(type === 'dropdown') {
+        COLUMN_META[editingColIdx].options = optsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    }
+    closeModal(); renderBodies(); showToast("Column Settings Saved"); triggerAutosave();
 }
 
-function exportCSV() {
-    let csv = HEADERS.join(",") + "\n" + DATA.map(r => r.join(",")).join("\n");
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([csv], {type: "text/csv"}));
-    a.download = "Aurus_Tracker.csv"; a.click();
-}
-
-renderHeaders(); renderBodies();
-</script>
-</body>
-</html>
+function addRowContext(offset) {
+    if(!contextTarget) return;
+    const rIdx = parseInt(contextTarget.parentElement.dataset.index) + offset;
+    const r = Array(HEADERS.length).fill("");
+    const statusIdx = HEADERS.indexOf("Project Status"); if(statusIdx >= 0) r[statusIdx] = "Yet to Start";
+    DATA.splice(rIdx, 0, r);
+    let newFmts = {}; for(let k in FORMATS) { let key = parseInt(k); newFmts[key >= rIdx ? key+1 : key] = FORMATS[k]; } FORMATS = newFmts;
