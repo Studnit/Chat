@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurus Certification Tracker Pro</title>
+
+<style>
+:root {
+  --excel-green: #217346;
+  --bg-color: #f4f7f6;
+  --text-dark: #2c3e50;
+  --border-color: #bdc3c7;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg-color); margin: 0; padding: 20px 20px 40px 40px;
+}
+
+h1 { margin: 0; color: var(--text-dark); }
+.section-title {
+  color: #2c3e50; margin-top: 30px; margin-bottom: 10px; font-size: 20px; display: flex; align-items: center; gap: 10px;
+}
+
+/* HEADER & DASHBOARD */
+.header-container { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+.dashboard { display: flex; gap: 15px; margin-top: 12px; }
+.stat-box {
+  background: #fff; padding: 10px 18px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); font-size: 14px; font-weight: bold; color: var(--text-dark); border-left: 5px solid #3498db;
+}
+.stat-box:nth-child(2) { border-left-color: #00c875; } 
+.stat-box:nth-child(3) { border-left-color: #fdab3d; } 
+.stat-box:nth-child(4) { border-left-color: #e2445c; } 
+
+.controls { display: flex; gap: 10px; align-items: center; }
+#searchInput { padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; width: 200px; outline: none; font-size: 14px; }
+#searchInput:focus { border-color: #3498db; }
+
+.main-btn {
+  background: #3498db; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s;
+}
+.main-btn:hover { filter: brightness(1.1); }
+.export-btn { background: var(--excel-green); }
+.save-file-btn { background: #2c3e50; }
+
+/* TABLE & SCROLLER */
+.table-wrapper {
+  overflow-x: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-radius: 8px; background: #fff; max-height: 55vh; margin-bottom: 20px;
+}
+.table-wrapper::-webkit-scrollbar { height: 12px; }
+.table-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
+.table-wrapper::-webkit-scrollbar-thumb { background: #bdc3c7; border-radius: 8px; border: 2px solid #f1f1f1;}
+
+table { width: 100%; border-collapse: collapse; background: #fff; min-width: 1400px; }
+th, td { border: 1px solid var(--border-color); padding: 8px 10px; font-size: 13px; text-align: center; white-space: nowrap; }
+th { position: sticky; color: #fff; font-size: 14px; box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4); z-index: 3; }
+
+.sort-header th { height: 35px; top: 0; cursor: pointer; background: #34495e; }
+.filter-row th { top: 55px; background: #ecf0f1 !important; padding: 5px; z-index: 2;}
+.col-filter { width: 100%; box-sizing: border-box; padding: 6px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px; }
+
+/* ROW & CELL COLORS */
+.status-working { background: #fdab3d !important; color: #fff !important; }
+.status-done { background: #00c875 !important; color: #fff !important; }
+.status-stuck { background: #e2445c !important; color: #fff !important; }
+.status-yet { background: #c4c4c4 !important; color: #fff !important; }
+.week-yes { background: #2ecc71 !important; color: #fff; }
+.week-no { background: #e74c3c !important; color: #fff; }
+
+/* CONTEXT MENU */
+.context-menu {
+  position: absolute; background: #fff; border: 1px solid var(--border-color); box-shadow: 2px 4px 12px rgba(0,0,0,0.2);
+  z-index: 10000; border-radius: 6px; padding: 8px 0; min-width: 200px; list-style: none; display: none;
+}
+.context-menu li { padding: 8px 20px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 10px;}
+.context-menu li:hover { background: #f4f7f6; color: #3498db; }
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5); z-index: 10001; align-items: center; justify-content: center;
+}
+.modal-box { background: #fff; padding: 25px; border-radius: 8px; width: 350px; }
+
+#toast {
+  visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s;
+}
+#toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+</style>
+</head>
+<body>
+
+<div id="toast">Notification</div>
+
+<div id="colSettingsModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>⚙️ Column Settings</h3>
+    <p id="modalColName" style="color:#3498db; font-weight:bold;"></p>
+    <label>Data Type:</label>
+    <select id="colTypeSelect" onchange="toggleDropdownOptions()" style="width:100%; padding:8px; margin-top:5px;">
+      <option value="text">Free Text</option>
+      <option value="date">Date Picker</option>
+      <option value="dropdown">Dropdown</option>
+    </select>
+    <div id="dropdownOptionsDiv" style="display:none; margin-top:15px;">
+      <label>Options (comma separated):</label>
+      <input type="text" id="colDropdownOptions" style="width:100%; padding:8px;">
+    </div>
+    <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
+      <button onclick="closeModal()">Cancel</button>
+      <button onclick="saveColumnSettings()" style="background:#27ae60; color:#fff; border:none; padding:8px 15px; border-radius:4px;">Save</button>
+    </div>
+  </div>
+</div>
+
+<ul id="contextMenu" class="context-menu">
+  <li onclick="renameColumnContext()">✏️ Rename Column</li>
+  <li onclick="openColumnSettingsContext()">⚙️ Column Type</li>
+  <hr>
+  <li onclick="addRowContext(0)">⬆️ Insert Row Above</li>
+  <li onclick="addRowContext(1)">⬇️ Insert Row Below</li>
+  <li onclick="deleteRowContext()" style="color:red;">🗑️ Delete Row</li>
+  <hr>
+  <li onclick="triggerColorPicker()">🎨 Cell Color</li>
+  <li onclick="clearFormat()">🚫 Clear Format</li>
+</ul>
+<input type="color" id="hiddenColorPicker" style="display:none;" onchange="applyCellColor(this.value)">
+
+<div class="header-container">
+  <div>
+    <h1>Aurus Certification Tracker</h1>
+    <div class="dashboard">
+      <div class="stat-box">📊 Total: <span id="statTotal">0</span></div>
+      <div class="stat-box">✅ Done: <span id="statComp">0</span></div>
+      <div class="stat-box">⏳ In-Progress: <span id="statProg">0</span></div>
+      <div class="stat-box">🛑 Stuck: <span id="statStuck">0</span></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button id="adminBtn" class="main-btn" onclick="toggleAdmin()">🔒 Enable Admin Mode</button>
+    <button id="saveFileBtn" class="main-btn save-file-btn" onclick="downloadSelf()" style="display:none;">💾 Save & Download Tracker</button>
+    <input type="text" id="searchInput" placeholder="🔍 Search..." oninput="renderBodies()">
+    <button class="main-btn export-btn" onclick="exportCSV()">📤 Export CSV</button>
+  </div>
+</div>
+
+<h2 class="section-title">⏳ In-Progress</h2>
+<div class="table-wrapper">
+<table id="inProgressTable"><thead></thead><tbody id="tbody-inprogress"></tbody></table>
+</div>
+
+<h2 class="section-title">✅ Completed</h2>
+<div class="table-wrapper">
+<table id="completedTable"><thead></thead><tbody id="tbody-completed"></tbody></table>
+</div>
+
+<script>
+/**
+ * DATA STORAGE - When you download the file, the current values 
+ * of these variables are written directly into the new file.
+ */
+let HEADERS = ["SR NO", "EP ID", "Certification Name", "Start Date", "End Date", "Project Status", "Developer Name", "Team Lead Name", "Last Week", "9–13 Feb"];
+
+let DATA = [
+["1","EP-0128","Chase ISO Wiseasy R1 PTS V6","21/09/25","17/02/26","Working on it","Sakshi Gudmewar","Vrushabh Munde","YES","YES"],
+["2","EP-0132","Flexa Wallet Instore CPC","15/11/25","20/02/26","Working on it","Naga Mani Gatti","Harshal Chaudhari","YES","YES"],
+["12","EP-0165","Chase Stratus Store and Forward","05/12/25","12/02/26","Done","Gaurav Shitole","Gaurav Shitole","","YES"]
+];
+
+let FORMATS = {}; 
+let COLUMN_META = {
+    3: { type: 'date' }, 4: { type: 'date' },
+    5: { type: 'dropdown', options: ['Working on it', 'Done', 'Stuck', 'Yet to Start'] },
+    8: { type: 'dropdown', options: ['YES', 'NO', 'NA', 'Waiting'] },
+    9: { type: 'dropdown', options: ['YES', 'NO', 'NA', 'Waiting'] }
+};
+
+const teamMembersList = ["Nitesh Kharose", "Harshal Chaudhari", "Hemantkumar Nikole", "Nagamani Gatti", "Vaishnavi Mate", "Rushikesh Kadam", "Vishal Gaikwad", "Sanket Bargal"];
+
+let admin = false, activeRow = null, contextTarget = null;
+
+// TOAST
+function showToast(msg) {
+  const t = document.getElementById("toast"); t.innerText = msg;
+  t.className = "show"; setTimeout(() => t.className = "", 3000);
+}
+
+// RENDERERS
+function renderHeaders() {
+  const tids = ['inProgressTable', 'completedTable'];
+  tids.forEach(tid => {
+    const thead = document.querySelector(`#${tid} thead`);
+    let html = `<tr class="sort-header">` + HEADERS.map((h, i) => `<th>${h}</th>`).join('') + `</tr>`;
+    html += `<tr class="filter-row">` + HEADERS.map((h, i) => `<th><input type="text" class="col-filter" oninput="renderBodies()"></th>`).join('') + `</tr>`;
+    thead.innerHTML = html;
+  });
+}
+
+function renderBodies() {
+  const tbProg = document.getElementById("tbody-inprogress"); 
+  const tbComp = document.getElementById("tbody-completed");
+  tbProg.innerHTML = ""; tbComp.innerHTML = "";
+  
+  let stats = { total: 0, comp: 0, prog: 0, stuck: 0 };
+  let statusIdx = HEADERS.findIndex(h => h.toLowerCase().includes("status"));
+
+  DATA.forEach((r, rIdx) => {
+    const status = (r[statusIdx] || "").toUpperCase();
+    const isDone = status === "DONE";
+    
+    // Simple Search Filter
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    if(search && !r.join(" ").toLowerCase().includes(search)) return;
+
+    const tr = document.createElement("tr");
+    tr.dataset.index = rIdx;
+    
+    tr.innerHTML = r.map((cell, cIdx) => {
+      let meta = COLUMN_META[cIdx] || {type: 'text'};
+      let style = "";
+      let fmt = (FORMATS[rIdx] && FORMATS[rIdx][cIdx]) ? FORMATS[rIdx][cIdx] : {};
+      if(fmt.bg) style = `background-color:${fmt.bg} !important; color:#000;`;
+      
+      let cls = "";
+      if(cell === "YES") cls = "week-yes";
+      if(cell === "NO") cls = "week-no";
+      if(status === "WORKING ON IT" && cIdx === statusIdx) cls = "status-working";
+      if(status === "DONE" && cIdx === statusIdx) cls = "status-done";
+      if(status === "STUCK" && cIdx === statusIdx) cls = "status-stuck";
+
+      if(admin && meta.type === 'dropdown') {
+        let opts = meta.options || [];
+        let optHtml = `<option value=""></option>` + opts.map(o => `<option value="${o}" ${o===cell?'selected':''}>${o}</option>`).join('');
+        return `<td style="${style}"><select onchange="updateData(${rIdx}, ${cIdx}, this.value)" style="width:100%; border:none; background:transparent;">${optHtml}</select></td>`;
+      }
+
+      return `<td contenteditable="${admin && meta.type==='text'}" class="${cls}" style="${style}" onblur="updateData(${rIdx}, ${cIdx}, this.innerText)">${cell}</td>`;
+    }).join("");
+
+    if(isDone) { tbComp.appendChild(tr); stats.comp++; } 
+    else { tbProg.appendChild(tr); if(status.includes("WORK")) stats.prog++; if(status.includes("STUCK")) stats.stuck++; }
+    stats.total++;
+  });
+
+  document.getElementById("statTotal").innerText = stats.total;
+  document.getElementById("statComp").innerText = stats.comp;
+  document.getElementById("statProg").innerText = stats.prog;
+  document.getElementById("statStuck").innerText = stats.stuck;
+}
+
+function updateData(r, c, val) {
+  DATA[r][c] = val;
+}
+
+// ADMIN & PERSISTENCE
+function toggleAdmin() {
+  if(!admin) {
+    if(prompt("Admin Password:") === "admin123") {
+      admin = true;
+      document.getElementById("adminBtn").innerText = "🔓 Exit Admin";
+      document.getElementById("saveFileBtn").style.display = "block";
+      showToast("Admin Mode Active");
+    }
+  } else {
+    admin = false;
+    document.getElementById("adminBtn").innerText = "🔒 Enable Admin Mode";
+    document.getElementById("saveFileBtn").style.display = "none";
+  }
+  renderBodies();
+}
+
+/**
+ * THE SAVE ENGINE
+ * This function takes the entire HTML of this page, 
+ * injects the NEW values of DATA, HEADERS, etc., 
+ * and downloads it as a new HTML file.
+ */
+function downloadSelf() {
+  const currentHtml = document.documentElement.outerHTML;
+  
+  // Create string versions of current state
+  const dataStr = JSON.stringify(DATA);
+  const headerStr = JSON.stringify(HEADERS);
+  const metaStr = JSON.stringify(COLUMN_META);
+  const formatStr = JSON.stringify(FORMATS);
+
+  // Replace the hardcoded variables in the script tag
+  let newHtml = currentHtml
+    .replace(/let DATA = \[[\s\S]*?\];/, `let DATA = ${dataStr};`)
+    .replace(/let HEADERS = \[[\s\S]*?\];/, `let HEADERS = ${headerStr};`)
+    .replace(/let COLUMN_META = \{[\s\S]*?\};/, `let COLUMN_META = ${metaStr};`)
+    .replace(/let FORMATS = \{[\s\S]*?\};/, `let FORMATS = ${formatStr};`);
+
+  const blob = new Blob([newHtml], {type: "text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Aurus_Tracker_Updated.html";
+  a.click();
+  showToast("File Saved & Downloaded!");
+}
+
+// CONTEXT MENU LOGIC
+document.addEventListener('contextmenu', e => {
+  if(!admin) return;
+  let td = e.target.closest('td');
+  if(td) {
+    e.preventDefault();
+    contextTarget = td;
+    const menu = document.getElementById("contextMenu");
+    menu.style.display = "block";
+    menu.style.left = e.pageX + "px";
+    menu.style.top = e.pageY + "px";
+  }
+});
+document.addEventListener('click', () => document.getElementById("contextMenu").style.display = "none");
+
+function addRowContext(offset) {
+  const rIdx = parseInt(contextTarget.parentElement.dataset.index) + offset;
+  DATA.splice(rIdx, 0, Array(HEADERS.length).fill(""));
+  renderBodies();
+}
+
+function deleteRowContext() {
+  const rIdx = parseInt(contextTarget.parentElement.dataset.index);
+  if(confirm("Delete this row?")) {
+    DATA.splice(rIdx, 1);
+    renderBodies();
+  }
+}
+
+function triggerColorPicker() { document.getElementById("hiddenColorPicker").click(); }
+function applyCellColor(hex) {
+  const rIdx = contextTarget.parentElement.dataset.index;
+  const cIdx = contextTarget.cellIndex;
+  if(!FORMATS[rIdx]) FORMATS[rIdx] = {};
+  FORMATS[rIdx][cIdx] = { bg: hex };
+  renderBodies();
+}
+
+function exportCSV() {
+  let csv = HEADERS.join(",") + "\n";
+  DATA.forEach(row => csv += row.join(",") + "\n");
+  const blob = new Blob([csv], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Tracker.csv";
+  a.click();
+}
+
+renderHeaders();
+renderBodies();
+</script>
+</body>
+</html>
