@@ -6,6 +6,7 @@
 <title>Aurus Certification Tracker Pro</title>
 
 <style>
+/* ---------------- ROOT ---------------- */
 :root {
   --excel-green: #217346;
   --bg-color: #f4f7f6;
@@ -15,136 +16,148 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--bg-color); margin: 0; padding: 20px 20px 40px 40px;
+  background: var(--bg-color);
+  margin: 0;
+  padding: 20px 20px 40px 40px;
 }
 
 h1 { margin: 0; color: var(--text-dark); }
-.section-title {
-  color: #2c3e50; margin-top: 30px; margin-bottom: 10px; font-size: 20px; display: flex; align-items: center; gap: 10px;
-}
 
-/* HEADER & DASHBOARD */
-.header-container { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
-.dashboard { display: flex; gap: 15px; margin-top: 12px; align-items: center; }
-.stat-box {
-  background: #fff; padding: 10px 18px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); font-size: 14px; font-weight: bold; color: var(--text-dark); border-left: 5px solid #3498db;
-}
-.stat-box:nth-child(2) { border-left-color: #00c875; } 
-.stat-box:nth-child(3) { border-left-color: #fdab3d; } 
-.stat-box:nth-child(4) { border-left-color: #e2445c; } 
-
-#autosaveIndicator {
-  font-size: 12px; color: #27ae60; font-weight: bold; opacity: 0; transition: opacity 0.3s; margin-left: 10px;
+/* ---------------- HEADER ---------------- */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
 }
 
 .controls { display: flex; gap: 10px; align-items: center; }
-#searchInput { padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; width: 200px; outline: none; font-size: 14px; }
-#searchInput:focus { border-color: #3498db; }
 
 .main-btn {
-  background: #3498db; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s;
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
 }
-.main-btn:hover { filter: brightness(1.1); }
+
 .export-btn { background: var(--excel-green); }
-#adminSaveBtn { background: #2ecc71; display: none; }
 
-/* TABLE & SCROLLER */
+#searchInput {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  width: 200px;
+}
+
+/* ---------------- AUTOSAVE INDICATOR ---------------- */
+#autosaveIndicator {
+  display: none;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+#autosaveIndicator.saving { color: #f39c12; }
+#autosaveIndicator.saved { color: #27ae60; }
+
+/* ---------------- DASHBOARD ---------------- */
+.dashboard {
+  display: flex;
+  gap: 15px;
+  margin-top: 12px;
+}
+
+.stat-box {
+  background: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  border-left: 5px solid #3498db;
+}
+
+.stat-box:nth-child(2){border-left-color:#00c875}
+.stat-box:nth-child(3){border-left-color:#fdab3d}
+.stat-box:nth-child(4){border-left-color:#e2445c}
+
+/* ---------------- TABLE ---------------- */
 .table-wrapper {
-  overflow-x: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-radius: 8px; background: #fff; max-height: 50vh; margin-bottom: 20px; padding-bottom: 5px;
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
-.table-wrapper::-webkit-scrollbar { height: 12px; }
-.table-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; margin: 0 10px; }
-.table-wrapper::-webkit-scrollbar-thumb { background: #bdc3c7; border-radius: 8px; border: 2px solid #f1f1f1;}
-.table-wrapper::-webkit-scrollbar-thumb:hover { background: #95a5a6; }
 
-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 1400px; }
-th, td { border: 1px solid var(--border-color); padding: 8px 10px; font-size: 13px; text-align: center; white-space: nowrap; }
-th { position: sticky; color: #fff; font-size: 14px; box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4); z-index: 3; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1400px;
+}
 
-.sort-header th { height: 35px; top: 0; cursor: pointer; user-select: none; background: #34495e; }
-.filter-row th { top: 55px; background: #ecf0f1 !important; padding: 5px; border-top: none; z-index: 2;}
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 8px 10px;
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
+}
 
-/* COLORS */
-.status-working { background: #fdab3d !important; color: #fff !important; font-weight: bold; }
-.status-done { background: #00c875 !important; color: #fff !important; font-weight: bold; }
-.status-stuck { background: #e2445c !important; color: #fff !important; font-weight: bold; }
-.status-yet { background: #c4c4c4 !important; color: #fff !important; font-weight: bold; }
-.week-yes { background: #2ecc71 !important; color: #fff; font-weight: bold; }
-.week-no { background: #e74c3c !important; color: #fff; font-weight: bold; }
-.week-na { background: #f1c40f !important; font-weight: bold; }
-.week-waiting { background: #aed6f1 !important; font-weight: bold; }
+th {
+  background: #34495e;
+  color: #fff;
+  position: sticky;
+  top: 0;
+}
 
+td[contenteditable="true"]:focus {
+  outline: 3px solid var(--excel-green);
+  outline-offset: -2px;
+}
+
+/* ---------------- STATUS COLORS ---------------- */
+.status-working{background:#fdab3d!important;color:#fff;font-weight:bold}
+.status-done{background:#00c875!important;color:#fff;font-weight:bold}
+.status-stuck{background:#e2445c!important;color:#fff;font-weight:bold}
+.status-yet{background:#c4c4c4!important;color:#fff;font-weight:bold}
+
+.week-yes{background:#2ecc71!important;color:#fff;font-weight:bold}
+.week-no{background:#e74c3c!important;color:#fff;font-weight:bold}
+.week-na{background:#f1c40f!important;font-weight:bold}
+.week-waiting{background:#aed6f1!important;font-weight:bold}
+
+/* ---------------- DROPDOWN ---------------- */
 select.dynamic-dropdown {
-  width: 100%; height: 100%; border: none; font-weight: inherit; color: inherit; font-family: inherit; font-size: inherit;
-  background: transparent; outline: none; cursor: pointer; appearance: none; text-align: center;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-td[contenteditable="true"]:focus { outline: 3px solid var(--excel-green); outline-offset: -2px; }
-tr.active-row td { filter: brightness(0.92); }
-
-/* CONTEXT MENU */
-.context-menu {
-  position: absolute; background: #fff; border: 1px solid var(--border-color); box-shadow: 2px 4px 12px rgba(0,0,0,0.2);
-  z-index: 10000; border-radius: 6px; padding: 8px 0; min-width: 200px; list-style: none; margin: 0; display: none;
-}
-.context-menu li { padding: 8px 20px; font-size: 13px; cursor: pointer; color: #2c3e50; font-weight: 500; display: flex; align-items: center; gap: 10px;}
-.context-menu li:hover { background: #f4f7f6; color: #3498db; }
-.context-menu li.danger { color: #e74c3c; }
-
-/* MODALS */
-.modal-overlay {
-  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5); z-index: 10001; align-items: center; justify-content: center;
-}
-.modal-box { background: #fff; padding: 25px; border-radius: 8px; width: 350px; }
-.modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
-
+/* ---------------- TOAST ---------------- */
 #toast {
-  visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 5px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); opacity: 0; transition: 0.3s;
+  visibility: hidden;
+  min-width: 250px;
+  background: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 16px;
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-weight: bold;
 }
-#toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+#toast.show { visibility: visible; }
 </style>
 </head>
 
 <body>
 
-<div id="toast">Notification text</div>
-
-<div id="colSettingsModal" class="modal-overlay">
-  <div class="modal-box">
-    <h3>⚙️ Column Settings</h3>
-    <p id="modalColName" style="margin:0; font-size:13px; color:#3498db; font-weight:bold;"></p>
-    <label>Data Type:</label>
-    <select id="colTypeSelect" onchange="toggleDropdownOptions()" style="width:100%; padding:8px; margin-top:10px;">
-      <option value="text">📝 Free Text</option>
-      <option value="date">📅 Date Picker</option>
-      <option value="dropdown">🔽 Dropdown</option>
-    </select>
-    <div id="dropdownOptionsDiv" style="display:none; margin-top:10px;">
-      <label>Options (comma separated):</label>
-      <input type="text" id="colDropdownOptions" style="width:100%; padding:8px;">
-    </div>
-    <div class="modal-actions">
-      <button class="main-btn" style="background:#bdc3c7" onclick="closeModal()">Cancel</button>
-      <button class="main-btn" style="background:#27ae60" onclick="saveColumnSettings()">Save</button>
-    </div>
-  </div>
-</div>
-
-<ul id="contextMenu" class="context-menu">
-  <li onclick="renameColumnContext()">✏️ Rename Column</li>
-  <li onclick="openColumnSettingsContext()">⚙️ Column Type</li>
-  <hr>
-  <li onclick="addColumnContext(0)">➕ Column Left</li>
-  <li onclick="addColumnContext(1)">➕ Column Right</li>
-  <li class="danger" onclick="deleteColumnContext()">🗑️ Delete Column</li>
-  <hr>
-  <li onclick="addRowContext(0)">⬆️ Row Above</li>
-  <li onclick="addRowContext(1)">⬇️ Row Below</li>
-  <li class="danger" onclick="deleteRowContext()">🗑️ Delete Row</li>
-  <li onclick="moveRowContext(-1)">🔼 Move Up</li>
-  <li onclick="moveRowContext(1)">🔽 Move Down</li>
-</ul>
+<div id="toast">Saved</div>
 
 <div class="header-container">
   <div>
@@ -154,257 +167,163 @@ tr.active-row td { filter: brightness(0.92); }
       <div class="stat-box">✅ Done: <span id="statComp">0</span></div>
       <div class="stat-box">⏳ Working: <span id="statProg">0</span></div>
       <div class="stat-box">🛑 Stuck: <span id="statStuck">0</span></div>
-      <span id="autosaveIndicator">☁️ Autosaved</span>
     </div>
   </div>
+
   <div class="controls">
-    <button id="adminSaveBtn" class="main-btn" onclick="saveData()">💾 Save Now</button>
     <button class="main-btn export-btn" onclick="exportCSV()">📤 Export CSV</button>
-    <input type="text" id="searchInput" placeholder="🔍 Global Search..." oninput="renderBodies()">
-    <button id="adminBtn" class="main-btn" onclick="toggleAdmin()">🔒 Enable Admin Mode</button>
+    <input id="searchInput" placeholder="🔍 Search..." oninput="renderBodies()">
+    <button id="adminBtn" class="main-btn" onclick="toggleAdmin()">🔒 Enable Admin</button>
+    <span id="autosaveIndicator">☁️ Saving…</span>
   </div>
 </div>
 
-<h2 class="section-title">⏳ In-Progress & Queued Projects</h2>
-<div class="table-wrapper"><table id="inProgressTable"><thead></thead><tbody id="tbody-inprogress"></tbody></table></div>
+<h3>⏳ In-Progress & Queued</h3>
+<div class="table-wrapper">
+<table id="inProgressTable"><thead></thead><tbody id="tbody-inprogress"></tbody></table>
+</div>
 
-<h2 class="section-title">✅ Completed Projects</h2>
-<div class="table-wrapper"><table id="completedTable"><thead></thead><tbody id="tbody-completed"></tbody></table></div>
+<h3>✅ Completed</h3>
+<div class="table-wrapper">
+<table id="completedTable"><thead></thead><tbody id="tbody-completed"></tbody></table>
+</div>
 
 <script>
-// INITIAL DATA
-const initialHeaders = ["SR NO", "EP ID", "Certification Name", "Start Date", "End Date", "Project Status", "Developer Name", "Team Lead Name", "Last Week", "9–13 Feb"];
-const rawInitialData = [
-    ["1","EP-0128","Chase ISO Wiseasy R1 PTS V6 [04157999]","21/09/25","17/02/26","Working on it","Sakshi Gudmewar","Vrushabh Munde","YES","YES"],
-    ["12","EP-0165","Chase Stratus Store and Forward","05/12/25","12/02/26","Done","Gaurav Shitole","Gaurav Shitole","","YES"]
-];
+/* ---------------- DATA ---------------- */
+const initialHeaders = ["SR NO","EP ID","Certification Name","Start Date","End Date","Project Status","Developer Name","Team Lead Name","Last Week","9–13 Feb"];
 
-// STATE
-let HEADERS = localStorage.getItem("trackerHeaders_v8") ? JSON.parse(localStorage.getItem("trackerHeaders_v8")) : [...initialHeaders];
-let DATA = localStorage.getItem("trackerData_v8") ? JSON.parse(localStorage.getItem("trackerData_v8")) : JSON.parse(JSON.stringify(rawInitialData));
-let FORMATS = localStorage.getItem("trackerFormats_v8") ? JSON.parse(localStorage.getItem("trackerFormats_v8")) : {};
-let COLUMN_META = localStorage.getItem("trackerColMeta_v8") ? JSON.parse(localStorage.getItem("trackerColMeta_v8")) : {
-    5: { type: 'dropdown', options: ['Working on it', 'Done', 'Stuck', 'Yet to Start'] },
-    8: { type: 'dropdown', options: ['YES', 'NO', 'NA', 'Waiting'] },
-    9: { type: 'dropdown', options: ['YES', 'NO', 'NA', 'Waiting'] }
+const initialMeta = {
+  3:{type:'date'},4:{type:'date'},
+  5:{type:'dropdown',options:['Working on it','Done','Stuck','Yet to Start']},
+  8:{type:'dropdown',options:['YES','NO','NA','Waiting']},
+  9:{type:'dropdown',options:['YES','NO','NA','Waiting']}
 };
 
-let admin = false, contextTarget = null, activeRow = null, autosaveTimer = null;
+const rawInitialData = JSON.parse(localStorage.getItem("trackerData_v8")) || [
+  ["1","EP-0128","Chase ISO Wiseasy","21/09/25","17/02/26","Working on it","Sakshi","Vrushabh","YES","YES"]
+];
 
-// NOTIFICATIONS
-function showToast(msg, type="success") {
-    const toast = document.getElementById("toast");
-    toast.innerText = msg;
-    toast.style.background = type === "success" ? "#27ae60" : "#e74c3c";
-    toast.className = "show";
-    setTimeout(() => toast.className = "", 3000);
-}
+let HEADERS = initialHeaders;
+let DATA = rawInitialData;
+let COLUMN_META = initialMeta;
+let admin = false;
 
-function triggerAutosave() {
-    if(!admin) return;
-    clearTimeout(autosaveTimer);
-    autosaveTimer = setTimeout(() => saveData(true), 2000);
-}
-
-function saveData(isAutosave = false) {
-    localStorage.setItem("trackerHeaders_v8", JSON.stringify(HEADERS));
-    localStorage.setItem("trackerData_v8", JSON.stringify(DATA));
-    localStorage.setItem("trackerFormats_v8", JSON.stringify(FORMATS));
-    localStorage.setItem("trackerColMeta_v8", JSON.stringify(COLUMN_META));
-    
-    if(isAutosave) {
-        const ind = document.getElementById("autosaveIndicator");
-        ind.style.opacity = "1";
-        setTimeout(() => ind.style.opacity = "0", 1500);
-    } else {
-        showToast("💾 Manual Save Complete");
+/* ---------------- AUTOSAVE ---------------- */
+let autosaveTimer=null, autosaveDirty=false;
+function markDirty(){
+  if(!admin)return;
+  autosaveDirty=true;
+  const el=document.getElementById("autosaveIndicator");
+  el.style.display="inline";
+  el.textContent="☁️ Saving…";
+  el.className="saving";
+  clearTimeout(autosaveTimer);
+  autosaveTimer=setTimeout(()=>{
+    if(autosaveDirty){
+      saveData();
+      autosaveDirty=false;
+      el.textContent="☁️ Cloud Autosaved ✓";
+      el.className="saved";
+      setTimeout(()=>el.style.display="none",2000);
     }
+  },2000);
 }
 
-// UI LOGIC
-function toggleAdmin() {
-    if(!admin) {
-        if(prompt("Password:") !== "admin123") return showToast("Incorrect!", "error");
-        admin = true;
-        document.getElementById("adminBtn").innerText = "🔓 Exit Admin";
-        document.getElementById("adminSaveBtn").style.display = "block";
-        showToast("Admin Mode Enabled");
-    } else {
-        admin = false;
-        document.getElementById("adminBtn").innerText = "🔒 Enable Admin Mode";
-        document.getElementById("adminSaveBtn").style.display = "none";
-        showToast("Admin Mode Disabled");
-    }
-    renderHeaders(); renderBodies();
+/* ---------------- RENDER ---------------- */
+function renderHeaders(){
+  ["inProgressTable","completedTable"].forEach(id=>{
+    document.querySelector(`#${id} thead`).innerHTML =
+      "<tr>"+HEADERS.map(h=>`<th>${h}</th>`).join("")+"</tr>";
+  });
 }
 
-function renderHeaders() {
-    ['inProgressTable', 'completedTable'].forEach(tid => {
-        const thead = document.querySelector(`#${tid} thead`);
-        thead.innerHTML = `<tr class="sort-header">${HEADERS.map(h => `<th>${h}</th>`).join('')}</tr>`;
-    });
-}
+function renderBodies(){
+  const tbP=document.getElementById("tbody-inprogress");
+  const tbC=document.getElementById("tbody-completed");
+  tbP.innerHTML=""; tbC.innerHTML="";
 
-function renderBodies() {
-    const tbProg = document.getElementById("tbody-inprogress");
-    const tbComp = document.getElementById("tbody-completed");
-    tbProg.innerHTML = ""; tbComp.innerHTML = "";
-    
-    let stats = { total: 0, comp: 0, prog: 0, stuck: 0 };
+  let total=0,done=0,prog=0,stuck=0;
+  const statusIdx=HEADERS.indexOf("Project Status");
+  const q=document.getElementById("searchInput").value.toLowerCase();
 
-    DATA.forEach((r, idx) => {
-        const status = (r[5] || "").toUpperCase();
-        const isDone = status === "DONE";
-        
-        if(isDone) stats.comp++; else if(status === "STUCK") stats.stuck++; else stats.prog++;
-        stats.total++;
+  DATA.forEach((r,i)=>{
+    if(q && !r.join(" ").toLowerCase().includes(q))return;
+    const isDone=r[statusIdx]==="Done";
+    let tr=document.createElement("tr");
 
-        const tr = document.createElement("tr");
-        tr.dataset.index = idx;
-        tr.innerHTML = r.map((cell, cIdx) => {
-            let colMeta = COLUMN_META[cIdx] || { type: 'text' };
-            let cls = "";
-            if(cIdx === 5) {
-                if(status === "DONE") cls = "status-done";
-                else if(status === "STUCK") cls = "status-stuck";
-                else cls = "status-working";
-            }
-            
-            if(admin) {
-                if(colMeta.type === 'dropdown') {
-                    const opts = colMeta.options || [];
-                    return `<td class="${cls}"><select class="dynamic-dropdown" onchange="updateCell(${idx}, ${cIdx}, this.value)">
-                        <option value=""></option>${opts.map(o => `<option value="${o}" ${o===cell?'selected':''}>${o}</option>`).join('')}
-                    </select></td>`;
-                }
-                return `<td contenteditable="true" class="${cls}" oninput="updateCell(${idx}, ${cIdx}, this.innerText)">${cell}</td>`;
-            }
-            return `<td class="${cls}">${cell}</td>`;
-        }).join('');
-        
-        if(isDone) tbComp.appendChild(tr); else tbProg.appendChild(tr);
+    r.forEach((c,j)=>{
+      let td=document.createElement("td");
+      let meta=COLUMN_META[j]||{type:'text'};
+      td.innerText=c;
+
+      if(admin && meta.type==="text") td.contentEditable=true;
+      if(meta.type==="dropdown" && admin){
+        let sel=document.createElement("select");
+        sel.className="dynamic-dropdown";
+        meta.options.forEach(o=>{
+          let op=document.createElement("option");
+          op.value=o;op.text=o;
+          if(o===c)op.selected=true;
+          sel.appendChild(op);
+        });
+        sel.onchange=()=>{DATA[i][j]=sel.value;markDirty();renderBodies();}
+        td.innerHTML="";td.appendChild(sel);
+      }
+
+      if(j===statusIdx){
+        if(c==="Working on it")td.className="status-working";
+        if(c==="Done")td.className="status-done";
+        if(c==="Stuck")td.className="status-stuck";
+        if(c==="Yet to Start")td.className="status-yet";
+      }
+
+      td.oninput=()=>{DATA[i][j]=td.innerText;markDirty();}
+      tr.appendChild(td);
     });
 
-    document.getElementById("statTotal").innerText = stats.total;
-    document.getElementById("statComp").innerText = stats.comp;
-    document.getElementById("statProg").innerText = stats.prog;
-    document.getElementById("statStuck").innerText = stats.stuck;
+    total++;
+    if(isDone){done++;tbC.appendChild(tr);}
+    else{prog++;tbP.appendChild(tr);}
+  });
+
+  document.getElementById("statTotal").innerText=total;
+  document.getElementById("statComp").innerText=done;
+  document.getElementById("statProg").innerText=prog;
+  document.getElementById("statStuck").innerText=stuck;
 }
 
-function updateCell(rIdx, cIdx, val) {
-    DATA[rIdx][cIdx] = val;
-    if(cIdx === 5) renderBodies();
-    triggerAutosave();
+/* ---------------- ADMIN ---------------- */
+function toggleAdmin(){
+  if(!admin){
+    if(prompt("Admin Password")!=="admin123")return;
+    admin=true;
+    adminBtn.innerText="🔓 Exit Admin";
+  }else{
+    admin=false;
+    adminBtn.innerText="🔒 Enable Admin";
+    document.getElementById("autosaveIndicator").style.display="none";
+  }
+  renderBodies();
 }
 
-// CONTEXT MENU ACTIONS
-document.addEventListener('contextmenu', e => {
-    if(!admin) return;
-    const td = e.target.closest('td');
-    const th = e.target.closest('th');
-    if(td || th) {
-        e.preventDefault();
-        contextTarget = td || th;
-        const menu = document.getElementById("contextMenu");
-        menu.style.display = "block";
-        menu.style.left = e.pageX + "px";
-        menu.style.top = e.pageY + "px";
-        activeRow = td ? td.parentElement : null;
-    }
-});
-
-document.addEventListener('click', () => document.getElementById("contextMenu").style.display = "none");
-
-function addRowContext(offset) {
-    const idx = parseInt(activeRow.dataset.index) + offset;
-    DATA.splice(idx, 0, Array(HEADERS.length).fill(""));
-    showToast("Row Added");
-    renderBodies(); triggerAutosave();
+/* ---------------- STORAGE ---------------- */
+function saveData(){
+  localStorage.setItem("trackerData_v8",JSON.stringify(DATA));
 }
 
-function deleteRowContext() {
-    if(confirm("Delete this row?")) {
-        DATA.splice(parseInt(activeRow.dataset.index), 1);
-        showToast("Row Deleted", "error");
-        renderBodies(); triggerAutosave();
-    }
+function exportCSV(){
+  let csv=HEADERS.join(",")+"\n";
+  DATA.forEach(r=>csv+=r.join(",")+"\n");
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="Aurus_Tracker.csv";
+  a.click();
 }
 
-function moveRowContext(dir) {
-    const idx = parseInt(activeRow.dataset.index);
-    const target = idx + dir;
-    if(target >= 0 && target < DATA.length) {
-        [DATA[idx], DATA[target]] = [DATA[target], DATA[idx]];
-        showToast("Row Moved");
-        renderBodies(); triggerAutosave();
-    }
-}
-
-function addColumnContext(offset) {
-    const idx = contextTarget.cellIndex + offset;
-    const name = prompt("Column Name:");
-    if(name) {
-        HEADERS.splice(idx, 0, name);
-        DATA.forEach(r => r.splice(idx, 0, ""));
-        showToast("Column Added");
-        renderHeaders(); renderBodies(); triggerAutosave();
-    }
-}
-
-function deleteColumnContext() {
-    const idx = contextTarget.cellIndex;
-    if(confirm(`Delete column "${HEADERS[idx]}"?`)) {
-        HEADERS.splice(idx, 1);
-        DATA.forEach(r => r.splice(idx, 1));
-        showToast("Column Deleted", "error");
-        renderHeaders(); renderBodies(); triggerAutosave();
-    }
-}
-
-function renameColumnContext() {
-    const idx = contextTarget.cellIndex;
-    const name = prompt("New Name:", HEADERS[idx]);
-    if(name) {
-        HEADERS[idx] = name;
-        showToast("Column Renamed");
-        renderHeaders(); triggerAutosave();
-    }
-}
-
-// SETTINGS
-function openColumnSettingsContext() {
-    const idx = contextTarget.cellIndex;
-    document.getElementById("modalColName").innerText = HEADERS[idx];
-    document.getElementById("colSettingsModal").style.display = "flex";
-}
-
-function closeModal() { document.getElementById("colSettingsModal").style.display = "none"; }
-
-function toggleDropdownOptions() {
-    document.getElementById("dropdownOptionsDiv").style.display = document.getElementById("colTypeSelect").value === 'dropdown' ? 'block' : 'none';
-}
-
-function saveColumnSettings() {
-    const idx = Array.from(contextTarget.parentElement.children).indexOf(contextTarget);
-    const type = document.getElementById("colTypeSelect").value;
-    COLUMN_META[idx] = { type: type };
-    if(type === 'dropdown') {
-        COLUMN_META[idx].options = document.getElementById("colDropdownOptions").value.split(',').map(s => s.trim());
-    }
-    showToast("Type Updated");
-    closeModal(); renderBodies(); triggerAutosave();
-}
-
-function exportCSV() {
-    let csv = HEADERS.join(",") + "\n" + DATA.map(r => r.join(",")).join("\n");
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'Aurus_Tracker.csv'; a.click();
-    showToast("📊 CSV Exported");
-}
-
-renderHeaders(); renderBodies();
+/* ---------------- INIT ---------------- */
+renderHeaders();
+renderBodies();
 </script>
+
 </body>
 </html>
