@@ -3,326 +3,329 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aurus Certification Tracker Pro</title>
+<title>Transaction Analytics Pro</title>
 
 <style>
-/* ---------------- ROOT ---------------- */
 :root {
-  --excel-green: #217346;
-  --bg-color: #f4f7f6;
-  --text-dark: #2c3e50;
-  --border-color: #bdc3c7;
+  --bg: #0f172a;
+  --card: #1e293b;
+  --primary: #38bdf8;
+  --border-color: rgba(255, 255, 255, 0.3);
+  --success-bg: #064e3b;
+  --success-text: #34d399;
+  --error-bg: #7f1d1d;
+  --error-text: #f87171;
+  --neutral-bg: #334155;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: var(--bg-color);
-  margin: 0;
-  padding: 20px 20px 40px 40px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: #f1f5f9;
+  padding: 40px;
+  line-height: 1.6;
 }
 
-h1 { margin: 0; color: var(--text-dark); }
+.container { max-width: 1100px; margin: auto; }
 
-/* ---------------- HEADER ---------------- */
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 20px;
+.header-section { text-align: center; margin-bottom: 40px; }
+
+.search-container {
+  display: flex; gap: 12px; justify-content: center; margin-bottom: 20px;
 }
 
-.controls { display: flex; gap: 10px; align-items: center; }
+input {
+  background: var(--card);
+  border: 1px solid var(--primary);
+  padding: 14px;
+  border-radius: 10px;
+  color: white;
+  width: 350px;
+  font-size: 16px;
+  transition: 0.3s;
+}
 
-.main-btn {
-  background: #3498db;
-  color: #fff;
+input:focus { outline: none; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3); }
+
+button {
+  background: var(--primary);
+  color: #0f172a;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: bold;
   cursor: pointer;
-  font-weight: bold;
+  transition: 0.2s;
 }
 
-.export-btn { background: var(--excel-green); }
+button:hover { transform: translateY(-2px); opacity: 0.9; }
 
-#searchInput {
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  width: 200px;
+.data-wrapper {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 35px;
+  margin-top: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* ---------------- AUTOSAVE INDICATOR ---------------- */
-#autosaveIndicator {
-  display: none;
-  font-size: 12px;
-  font-weight: bold;
-  margin-left: 10px;
+/* SECTIONING */
+.section-container {
+  margin-bottom: 35px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 25px;
 }
-#autosaveIndicator.saving { color: #f39c12; }
-#autosaveIndicator.saved { color: #27ae60; }
 
-/* ---------------- DASHBOARD ---------------- */
-.dashboard {
+.section-container:last-child { border: none; }
+
+.section-header {
   display: flex;
-  gap: 15px;
-  margin-top: 12px;
-}
-
-.stat-box {
-  background: #fff;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: bold;
-  border-left: 5px solid #3498db;
-}
-
-.stat-box:nth-child(2){border-left-color:#00c875}
-.stat-box:nth-child(3){border-left-color:#fdab3d}
-.stat-box:nth-child(4){border-left-color:#e2445c}
-
-/* ---------------- TABLE ---------------- */
-.table-wrapper {
-  overflow-x: auto;
-  background: #fff;
-  border-radius: 8px;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
   margin-bottom: 20px;
 }
 
-table {
+/* TABLE ENHANCEMENTS */
+.report-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1400px;
-}
-
-th, td {
+  margin: 15px 0;
+  border-radius: 10px;
+  overflow: hidden;
   border: 1px solid var(--border-color);
-  padding: 8px 10px;
-  font-size: 13px;
-  text-align: center;
-  white-space: nowrap;
 }
 
-th {
-  background: #34495e;
-  color: #fff;
-  position: sticky;
-  top: 0;
+.report-table th, .report-table td {
+  border: 1px solid var(--border-color);
+  padding: 14px;
 }
 
-td[contenteditable="true"]:focus {
-  outline: 3px solid var(--excel-green);
-  outline-offset: -2px;
+.report-table th {
+  background: rgba(56, 189, 248, 0.15);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* ---------------- STATUS COLORS ---------------- */
-.status-working{background:#fdab3d!important;color:#fff;font-weight:bold}
-.status-done{background:#00c875!important;color:#fff;font-weight:bold}
-.status-stuck{background:#e2445c!important;color:#fff;font-weight:bold}
-.status-yet{background:#c4c4c4!important;color:#fff;font-weight:bold}
-
-.week-yes{background:#2ecc71!important;color:#fff;font-weight:bold}
-.week-no{background:#e74c3c!important;color:#fff;font-weight:bold}
-.week-na{background:#f1c40f!important;font-weight:bold}
-.week-waiting{background:#aed6f1!important;font-weight:bold}
-
-/* ---------------- DROPDOWN ---------------- */
-select.dynamic-dropdown {
-  width: 100%;
-  border: none;
-  background: transparent;
+/* Label column (first one) */
+.report-table td:first-child {
+  background: rgba(255,255,255,0.03);
   font-weight: bold;
-  cursor: pointer;
+  color: #94a3b8;
+  width: 25%;
 }
 
-/* ---------------- TOAST ---------------- */
-#toast {
-  visibility: hidden;
-  min-width: 250px;
-  background: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 5px;
-  padding: 16px;
-  position: fixed;
-  left: 50%;
-  bottom: 30px;
-  transform: translateX(-50%);
-  font-weight: bold;
+/* PILLS */
+.pill {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: inline-block;
+  font-family: 'Courier New', monospace;
 }
-#toast.show { visibility: visible; }
+
+.pill-success { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-text); }
+.pill-error { background: var(--error-bg); color: var(--error-text); border: 1px solid var(--error-text); }
+
+/* AI QUOTES / NOTES */
+.ai-quote {
+  border-left: 4px solid var(--primary);
+  background: rgba(56, 189, 248, 0.07);
+  padding: 15px 20px;
+  margin: 15px 0;
+  border-radius: 0 10px 10px 0;
+  color: #cbd5e1;
+}
+
+.highlight-blue { color: var(--primary); font-weight: bold; }
+.highlight-green { color: #34d399; font-weight: bold; }
+.highlight-yellow { color: #facc15; font-weight: bold; }
+
+/* LOADER */
+.loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
 </style>
 </head>
 
 <body>
 
-<div id="toast">Saved</div>
+<div class="container">
+  <div class="header-section">
+    <h2>💳 <span style="font-weight: 300;">Aurus</span> Transaction Audit</h2>
 
-<div class="header-container">
-  <div>
-    <h1>Aurus Certification Tracker</h1>
-    <div class="dashboard">
-      <div class="stat-box">📊 Total: <span id="statTotal">0</span></div>
-      <div class="stat-box">✅ Done: <span id="statComp">0</span></div>
-      <div class="stat-box">⏳ Working: <span id="statProg">0</span></div>
-      <div class="stat-box">🛑 Stuck: <span id="statStuck">0</span></div>
+    <div class="search-container">
+      <input id="txnId" value="295260853503884501" placeholder="Enter Transaction ID">
+      <button onclick="callAPI()">Run Analysis</button>
     </div>
+
+    <div id="status"></div>
   </div>
 
-  <div class="controls">
-    <button class="main-btn export-btn" onclick="exportCSV()">📤 Export CSV</button>
-    <input id="searchInput" placeholder="🔍 Search..." oninput="renderBodies()">
-    <button id="adminBtn" class="main-btn" onclick="toggleAdmin()">🔒 Enable Admin</button>
-    <span id="autosaveIndicator">☁️ Saving…</span>
-  </div>
-</div>
-
-<h3>⏳ In-Progress & Queued</h3>
-<div class="table-wrapper">
-<table id="inProgressTable"><thead></thead><tbody id="tbody-inprogress"></tbody></table>
-</div>
-
-<h3>✅ Completed</h3>
-<div class="table-wrapper">
-<table id="completedTable"><thead></thead><tbody id="tbody-completed"></tbody></table>
+  <div id="output" class="data-wrapper" style="display:none;"></div>
 </div>
 
 <script>
-/* ---------------- DATA ---------------- */
-const initialHeaders = ["SR NO","EP ID","Certification Name","Start Date","End Date","Project Status","Developer Name","Team Lead Name","Last Week","9–13 Feb"];
 
-const initialMeta = {
-  3:{type:'date'},4:{type:'date'},
-  5:{type:'dropdown',options:['Working on it','Done','Stuck','Yet to Start']},
-  8:{type:'dropdown',options:['YES','NO','NA','Waiting']},
-  9:{type:'dropdown',options:['YES','NO','NA','Waiting']}
-};
+// 🔥 SPECIAL TEXT FORMATTER
+function formatSpecialText(text) {
+  if (!text) return "";
 
-const rawInitialData = JSON.parse(localStorage.getItem("trackerData_v8")) || [
-  ["1","EP-0128","Chase ISO Wiseasy","21/09/25","17/02/26","Working on it","Sakshi","Vrushabh","YES","YES"]
-];
+  let formatted = text.replace(/\\n/g, "\n").trim();
 
-let HEADERS = initialHeaders;
-let DATA = rawInitialData;
-let COLUMN_META = initialMeta;
-let admin = false;
+  // Bold **text**
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<span class="highlight-blue">$1</span>');
 
-/* ---------------- AUTOSAVE ---------------- */
-let autosaveTimer=null, autosaveDirty=false;
-function markDirty(){
-  if(!admin)return;
-  autosaveDirty=true;
-  const el=document.getElementById("autosaveIndicator");
-  el.style.display="inline";
-  el.textContent="☁️ Saving…";
-  el.className="saving";
-  clearTimeout(autosaveTimer);
-  autosaveTimer=setTimeout(()=>{
-    if(autosaveDirty){
-      saveData();
-      autosaveDirty=false;
-      el.textContent="☁️ Cloud Autosaved ✓";
-      el.className="saved";
-      setTimeout(()=>el.style.display="none",2000);
-    }
-  },2000);
+  // Italics / Note /*text*/
+  formatted = formatted.replace(/\/\*(.*?)\*\//g, '<span class="highlight-yellow">$1</span>');
+
+  // Success highlights 'text'
+  formatted = formatted.replace(/'(.*?)'/g, '<span class="highlight-green">$1</span>');
+
+  // Inline Code `text`
+  formatted = formatted.replace(/`(.*?)`/g, '<code style="background:#0f172a; padding:3px 7px; border-radius:5px; color:#facc15; font-size:0.9em;">$1</code>');
+
+  // Blockquotes > text
+  if (formatted.startsWith(">")) {
+    return `<div class="ai-quote">${formatted.substring(1).trim()}</div>`;
+  }
+
+  return formatted;
 }
 
-/* ---------------- RENDER ---------------- */
-function renderHeaders(){
-  ["inProgressTable","completedTable"].forEach(id=>{
-    document.querySelector(`#${id} thead`).innerHTML =
-      "<tr>"+HEADERS.map(h=>`<th>${h}</th>`).join("")+"</tr>";
-  });
+// 🔥 AUTO-ICON DETECTOR
+function getIcon(title) {
+  const t = title.toLowerCase();
+  if (t.includes("analysis")) return "🧠";
+  if (t.includes("result") || t.includes("status")) return "📊";
+  if (t.includes("suggestion") || t.includes("fix") || t.includes("action")) return "💡";
+  if (t.includes("raw") || t.includes("log")) return "📝";
+  return "🔹";
 }
 
-function renderBodies(){
-  const tbP=document.getElementById("tbody-inprogress");
-  const tbC=document.getElementById("tbody-completed");
-  tbP.innerHTML=""; tbC.innerHTML="";
+// 🔥 CELL FORMAT
+function formatCellContent(content) {
+  const raw = content.trim();
+  const text = formatSpecialText(raw);
 
-  let total=0,done=0,prog=0,stuck=0;
-  const statusIdx=HEADERS.indexOf("Project Status");
-  const q=document.getElementById("searchInput").value.toLowerCase();
+  // Success Codes
+  if (raw === "00" || raw === "000" || raw.toLowerCase() === "approved") {
+    return `<span class="pill pill-success">${raw}</span>`;
+  }
 
-  DATA.forEach((r,i)=>{
-    if(q && !r.join(" ").toLowerCase().includes(q))return;
-    const isDone=r[statusIdx]==="Done";
-    let tr=document.createElement("tr");
+  // Error Codes (2-3 digits or decline text)
+  if (/^\d{2,3}$/.test(raw) || raw.toLowerCase().includes("decline") || raw.toLowerCase().includes("error")) {
+    return `<span class="pill pill-error">${raw}</span>`;
+  }
 
-    r.forEach((c,j)=>{
-      let td=document.createElement("td");
-      let meta=COLUMN_META[j]||{type:'text'};
-      td.innerText=c;
+  return text;
+}
 
-      if(admin && meta.type==="text") td.contentEditable=true;
-      if(meta.type==="dropdown" && admin){
-        let sel=document.createElement("select");
-        sel.className="dynamic-dropdown";
-        meta.options.forEach(o=>{
-          let op=document.createElement("option");
-          op.value=o;op.text=o;
-          if(o===c)op.selected=true;
-          sel.appendChild(op);
-        });
-        sel.onchange=()=>{DATA[i][j]=sel.value;markDirty();renderBodies();}
-        td.innerHTML="";td.appendChild(sel);
-      }
+// 🔥 TABLE GENERATOR
+function generateTable(markdown) {
+  const rows = markdown.split("\n").filter(r => r.includes("|"));
+  if (rows.length === 0) return "";
 
-      if(j===statusIdx){
-        if(c==="Working on it")td.className="status-working";
-        if(c==="Done")td.className="status-done";
-        if(c==="Stuck")td.className="status-stuck";
-        if(c==="Yet to Start")td.className="status-yet";
-      }
+  let html = `<table class="report-table">`;
+  const dataRows = rows.filter(r => !r.includes("---"));
 
-      td.oninput=()=>{DATA[i][j]=td.innerText;markDirty();}
-      tr.appendChild(td);
+  dataRows.forEach((row, index) => {
+    const cols = row.split("|").filter(c => c.trim() !== "");
+    html += "<tr>";
+
+    cols.forEach(col => {
+      const isHeader = (index === 0);
+      const content = isHeader ? col.trim() : formatCellContent(col);
+      html += isHeader ? `<th>${content}</th>` : `<td>${content}</td>`;
     });
 
-    total++;
-    if(isDone){done++;tbC.appendChild(tr);}
-    else{prog++;tbP.appendChild(tr);}
+    html += "</tr>";
   });
 
-  document.getElementById("statTotal").innerText=total;
-  document.getElementById("statComp").innerText=done;
-  document.getElementById("statProg").innerText=prog;
-  document.getElementById("statStuck").innerText=stuck;
+  html += "</table>";
+  return html;
 }
 
-/* ---------------- ADMIN ---------------- */
-function toggleAdmin(){
-  if(!admin){
-    if(prompt("Admin Password")!=="admin123")return;
-    admin=true;
-    adminBtn.innerText="🔓 Exit Admin";
-  }else{
-    admin=false;
-    adminBtn.innerText="🔒 Enable Admin";
-    document.getElementById("autosaveIndicator").style.display="none";
+// 🔥 MAIN PARSER
+function parseMarkdown(text) {
+  const sections = text.split("###");
+  let html = "";
+
+  sections.forEach(sec => {
+    if (!sec.trim()) return;
+
+    const lines = sec.trim().split("\n");
+    const title = lines.shift().trim();
+    const icon = getIcon(title);
+
+    html += `<div class="section-container">
+               <div class="section-header">${icon} ${formatSpecialText(title)}</div>`;
+
+    let tableBuffer = [];
+
+    lines.forEach(line => {
+      if (line.includes("|")) {
+        tableBuffer.push(line);
+      } else {
+        if (tableBuffer.length) {
+          html += generateTable(tableBuffer.join("\n"));
+          tableBuffer = [];
+        }
+
+        const formattedLine = formatSpecialText(line);
+        if (formattedLine) {
+          html += formattedLine.startsWith("<div") ? formattedLine : `<p style="margin: 12px 0;">${formattedLine}</p>`;
+        }
+      }
+    });
+
+    if (tableBuffer.length) {
+      html += generateTable(tableBuffer.join("\n"));
+    }
+
+    html += `</div>`;
+  });
+
+  return html;
+}
+
+// 🔥 API CALL
+async function callAPI() {
+  const txnId = document.getElementById("txnId").value;
+  const status = document.getElementById("status");
+  const output = document.getElementById("output");
+
+  status.innerHTML = `<span class="loader"></span> Scanning Transaction Hub...`;
+  output.style.display = "none";
+
+  try {
+    const res = await fetch(`http://10.192.13.230:5678/webhook-test/txn-analysis?txnId=${txnId}`);
+    const data = await res.json();
+
+    const aiText = data.prettyOutput || data.aiAnalysis?.raw || "No analysis available.";
+
+    output.innerHTML = parseMarkdown(aiText);
+    output.style.display = "block";
+
+    status.innerHTML = "✅ Audit Complete";
+  } catch (e) {
+    status.innerHTML = "❌ Connection Failed";
   }
-  renderBodies();
 }
 
-/* ---------------- STORAGE ---------------- */
-function saveData(){
-  localStorage.setItem("trackerData_v8",JSON.stringify(DATA));
-}
-
-function exportCSV(){
-  let csv=HEADERS.join(",")+"\n";
-  DATA.forEach(r=>csv+=r.join(",")+"\n");
-  let a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
-  a.download="Aurus_Tracker.csv";
-  a.click();
-}
-
-/* ---------------- INIT ---------------- */
-renderHeaders();
-renderBodies();
 </script>
 
 </body>
